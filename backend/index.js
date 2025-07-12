@@ -1,22 +1,12 @@
 /** @format */
 
-const express = require("express");
-const cors = require("cors");
-const app = express();
+// index.js
+require("dotenv").config();
 
-app.use(express.json());
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+const app = require("./app"); // Import the app with routes/middleware
 
-app.get("/", (req, res) => {
-  res.json({
-    data: "Hello from server",
-  });
+const PORT = process.env.PORT;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
-
-app.listen(8000);
-
-module.exports = app;
