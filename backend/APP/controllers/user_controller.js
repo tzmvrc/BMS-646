@@ -93,6 +93,7 @@ const registerUser = async (req, res) => {
       gender,
       isRegisteredVoter: false,
       isLoginApproved: false,
+      isVerified: false,
     });
 
     await newUser.save();
@@ -112,6 +113,8 @@ const registerUser = async (req, res) => {
         lastName: newUser.lastName,
         phoneNumber: newUser.phoneNumber,
         isLoginApproved: newUser.isLoginApproved,
+        isRegisteredVoter: newUser.isRegisteredVoter,
+        isVerified: newUser.isVerified,
       },
     });
   } catch (error) {
@@ -119,7 +122,6 @@ const registerUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 
 module.exports = {
   loginUser,

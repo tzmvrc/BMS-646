@@ -19,10 +19,12 @@ app.use(morgan("dev"));
 // Import Routes
 const adminRoutes = require("./APP/routers/admin_router");
 const userRoutes = require("./APP/routers/user_router");
+const otpRoutes = require("./APP/routers/otp_router");
 
 // Routes
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/otp", otpRoutes);
 
 app.get("/", (req, res) => {
   res.json({ data: "Hello from server" });

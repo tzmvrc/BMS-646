@@ -75,7 +75,6 @@ const addAdmin = async (req, res) => {
   }
 };
 
-
 const getAllResidences = async (req, res) => {
   try {
     const approvedUsers = await User.find({ isLoginApproved: true })
@@ -97,7 +96,7 @@ const getPendingApprovals = async (req, res) => {
     const approvals = await Approval.find({ status: "pending" })
       .populate(
         "userId",
-        "firstName lastName phoneNumber birthdate address gender isRegisteredVoter"
+        "firstName lastName phoneNumber birthdate address gender isRegisteredVoter isVerified"
       )
       .sort({ submittedAt: -1 });
 
@@ -167,10 +166,6 @@ const rejectUserRequest = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
-
-
-
 
 module.exports = {
   loginAdmin,
