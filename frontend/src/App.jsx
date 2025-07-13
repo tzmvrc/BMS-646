@@ -16,6 +16,7 @@ import Request from "./pages/Admin/Requests/Requests.jsx";
 import Reports from "./pages/Admin/Reports/Reports.jsx";
 import AdminNavbar from "./components/AdminNavbar";
 import Approvals from "./pages/Admin/Approvals/Approvals.jsx";
+import LandingPage from "./pages/Resident/Dashboard/Dashboard.jsx";
 import Events from "./pages/Admin/Events/Events.jsx";
 import "./App.css";
 
@@ -27,14 +28,26 @@ const AdminLayout = () => (
   </div>
 );
 
+// User layout for resident routes
+const UserLayout = () => (
+  <div>
+    <Outlet />
+  </div>
+);
+
 const AnimatedRoutes = ({ loading }) => {
   const location = useLocation();
 
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        {/* Login route */}
         <Route path="/" element={<Login />} />
-        <Route path="admin" element={<AdminLayout />}>
+        <Route path="/admin/login" element={<Login />} />
+
+        {/* Protected admin routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="residents" element={<Residents />} />
           <Route path="requests" element={<Request />} />
@@ -42,7 +55,12 @@ const AnimatedRoutes = ({ loading }) => {
           <Route path="approvals" element={<Approvals />} />
           <Route path="events" element={<Events />} />
         </Route>
-        <Route path="admin/login" element={<Login />} />
+
+        {/* Public resident routes */}
+        <Route path="/user" element={<UserLayout />}>
+          <Route index element={<LandingPage />} />
+          <Route path="dashboard" element={<LandingPage />} />
+        </Route>
       </Routes>
     </AnimatePresence>
   );

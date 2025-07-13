@@ -1,38 +1,70 @@
-/** @format */
 import React from "react";
-import { Link } from "react-router-dom";
+import { User } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+
+const navLinks = [
+  { to: "/admin/dashboard", label: "Dashboard" },
+  { to: "/admin/residents", label: "Residents" },
+  { to: "/admin/requests", label: "Requests" },
+  { to: "/admin/reports", label: "Reports" },
+  { to: "/admin/events", label: "Events" },
+];
 
 const Navbar = () => {
+  const location = useLocation();
+
   return (
-    <nav className="w-full mt-4 py-2 px-6 md:px-12 flex justify-between items-center bg-white ">
-      <div className="flex items-center">
-        <img src="/BrgyLogo.png" alt="BMS646 Logo" className="h-8" />
-      </div>
-
-      <div className="hidden md:flex space-x-8">
-        <Link to="/" className="text-gray-800 hover:text-blue-600">
-          Home
-        </Link>
-        <Link to="/" className="text-gray-800 hover:text-blue-600">
-          Services
-        </Link>
-        <Link to="/" className="text-gray-800 hover:text-blue-600">
-          Residences
-        </Link>
-        <Link to="/" className="text-gray-800 hover:text-blue-600">
-          Events
-        </Link>
-        <Link to="/" className="text-gray-800 hover:text-blue-600">
-          Message
-        </Link>
-      </div>
-
-      <div className="flex items-center space-x-4">
-        <Link to="/" className="text-gray-800 hover:text-blue-600 font-medium">
-          Residence
-        </Link>
-      </div>
-    </nav>
+    <div>
+      {/* Navbar */}
+      <nav className="bg-white bg-opacity-80 backdrop-blur-sm rounded-full max-w-7xl mx-auto px-6 py-3 mb-8 shadow-sm">
+        <div className="flex justify-between items-center">
+          <Link
+            to="/admin/dashboard"
+            className="text-xl font-bold text-gray-800 flex items-center gap-2"
+          >
+            <img src="/BrgyLogo.png" alt="BMS646 Logo" className="h-8" />
+          </Link>
+          <div className="flex space-x-1">
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.to;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`relative px-4 py-2 text-sm font-medium rounded-full flex items-center gap-1 transition-colors
+                    ${isActive ? "text-black" : "text-gray-800"}
+                    group
+                  `}
+                  tabIndex={0}
+                >
+                  {link.label}
+                  {/* underline effect */}
+                  <span
+                    className={`
+                      absolute left-4 right-4 -bottom-1 h-[2px] rounded-full transition-all duration-300
+                      ${
+                        isActive
+                          ? "bg-black w-[calc(100%-32px)]"
+                          : "bg-black w-0 group-hover:w-[calc(100%-32px)]"
+                      }
+                    `}
+                    style={{
+                      transitionProperty: "width,background-color",
+                    }}
+                  />
+                </Link>
+              );
+            })}
+          </div>
+          <Link
+            to="/admin/profile"
+            className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
+          >
+            <User className="w-4 h-4 text-gray-600" />
+          </Link>
+        </div>
+      </nav>
+    </div>
   );
 };
 
