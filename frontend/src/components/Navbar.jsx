@@ -3,14 +3,14 @@ import { User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
-  { to: "/admin/dashboard", label: "Dashboard" },
-  { to: "/admin/residents", label: "Residents" },
-  { to: "/admin/requests", label: "Requests" },
-  { to: "/admin/reports", label: "Reports" },
-  { to: "/admin/events", label: "Events" },
+  { to: "/dashboard", label: "Dashboard" },
+  { to: "/services", label: "Services" },
+  { to: "/requests", label: "Requests" },
+  { to: "/faqs", label: "FAQs" },
+  { to: "/About", label: "About" },
 ];
 
-const Navbar = () => {
+const AdminNavbar = () => {
   const location = useLocation();
 
   return (
@@ -68,4 +68,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default AdminNavbar;

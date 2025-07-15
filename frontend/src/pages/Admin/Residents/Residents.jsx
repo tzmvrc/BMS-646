@@ -59,7 +59,7 @@ const Residents = () => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [isApprovalsModalOpen, setIsApprovalsModalOpen] = useState(false);
 
-  const [activeTab, setActiveTab] = useState("residents");
+  const [activeTab, setActiveTab] = useState("approvals");
 
   useEffect(() => {
     setResidents(residentsData);
@@ -196,16 +196,6 @@ const Residents = () => {
           <div className="flex border-b border-gray-200 mb-6">
             <button
               className={`px-4 py-2 font-medium text-sm ${
-                activeTab === "residents"
-                  ? "text-black border-b-2 border-black"
-                  : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("residents")}
-            >
-              Residents List
-            </button>
-            <button
-              className={`px-4 py-2 font-medium text-sm ${
                 activeTab === "approvals"
                   ? "text-black border-b-2 border-black"
                   : "text-gray-500"
@@ -213,6 +203,16 @@ const Residents = () => {
               onClick={() => setActiveTab("approvals")}
             >
               Pending Account Approvals
+            </button>
+            <button
+              className={`px-4 py-2 font-medium text-sm ${
+                activeTab === "residents"
+                  ? "text-black border-b-2 border-black"
+                  : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab("residents")}
+            >
+              Residents List
             </button>
           </div>
 
@@ -298,7 +298,10 @@ const Residents = () => {
                       ) : (
                         pendingAccounts.map((account) => (
                           <tr key={account.id}>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td
+                              className="px-6 py-4 whitespace-nowrap"
+                              onClick={() => handleViewDetails(account)}
+                            >
                               <img
                                 className="h-10 w-10 rounded-full object-cover"
                                 src={account.idImage}
@@ -306,12 +309,18 @@ const Residents = () => {
                               />
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-medium text-gray-900">
+                              <div
+                                className="text-sm font-medium text-gray-900"
+                                onClick={() => handleViewDetails(account)}
+                              >
                                 {account.fullName}
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
+                              <div
+                                className="text-sm text-gray-500"
+                                onClick={() => handleViewDetails(account)}
+                              >
                                 {account.email}
                               </div>
                             </td>
@@ -332,28 +341,15 @@ const Residents = () => {
                             </td>
 
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                              <div className="flex gap-2">
+                              <div className="flex gap-2 justify-center items-center">
                                 <button
                                   onClick={() => handleViewDetails(account)}
-                                  className="text-gray-600 hover:text-blue-700 flex items-center gap-1"
+                                  className="text-gray-600 hover:text-gray-800 flex gap-1"
                                   title="View Details"
                                 >
-                                  <Eye size={16} />
+                                  <Eye size={25} />
                                 </button>
-                                <button
-                                  onClick={() => handleApprove(account.id)}
-                                  className="text-green-600 hover:text-green-800 flex items-center gap-1"
-                                  title="Approve"
-                                >
-                                  <CheckCircle2 size={16} />
-                                </button>
-                                <button
-                                  onClick={() => handleReject(account.id)}
-                                  className="text-red-600 hover:text-red-900 flex items-center gap-1"
-                                  title="Reject"
-                                >
-                                  <XCircle size={16} />
-                                </button>
+                                
                               </div>
                             </td>
                           </tr>

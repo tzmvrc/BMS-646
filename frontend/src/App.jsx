@@ -16,8 +16,10 @@ import Request from "./pages/Admin/Requests/Requests.jsx";
 import Reports from "./pages/Admin/Reports/Reports.jsx";
 import AdminNavbar from "./components/AdminNavbar";
 import Approvals from "./pages/Admin/Approvals/Approvals.jsx";
-import LandingPage from "./pages/Resident/Dashboard/Dashboard.jsx";
+import LandingPage from "./pages/Resident/LandingPage/LandingPage.jsx";
+import UserDashboard from "./pages/Resident/Dashboard/Dashboard.jsx";
 import Events from "./pages/Admin/Events/Events.jsx";
+import Navbar from "./components/Navbar.jsx";
 import "./App.css";
 
 // Admin layout with persistent navbar
@@ -30,7 +32,15 @@ const AdminLayout = () => (
 
 // User layout for resident routes
 const UserLayout = () => (
-  <div>
+  <div className="min-h-screen dotted-bg p-6">
+    <Navbar />
+    <Outlet />
+  </div>
+);
+
+// Public layout for resident routes
+const PublicLayout = () => (
+  <div className="min-h-screen">
     <Outlet />
   </div>
 );
@@ -42,12 +52,10 @@ const AnimatedRoutes = ({ loading }) => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Login route */}
-        <Route path="/" element={<Login />} />
-        <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin" element={<Login />} />
 
         {/* Protected admin routes */}
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="residents" element={<Residents />} />
           <Route path="requests" element={<Request />} />
@@ -56,10 +64,12 @@ const AnimatedRoutes = ({ loading }) => {
           <Route path="events" element={<Events />} />
         </Route>
 
-        {/* Public resident routes */}
-        <Route path="/user" element={<UserLayout />}>
-          <Route index element={<LandingPage />} />
-          <Route path="dashboard" element={<LandingPage />} />
+        {/* User routes */}
+        <Route path="/" element={<LandingPage />} />
+
+        {/* User dashboard routes */}
+        <Route path="/" element={<UserLayout />}>
+          <Route path="dashboard" element={<UserDashboard />} />
         </Route>
       </Routes>
     </AnimatePresence>

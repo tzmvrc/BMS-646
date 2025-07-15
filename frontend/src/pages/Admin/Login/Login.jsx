@@ -1,6 +1,5 @@
 /** @format */
 import React, { useState, useEffect } from "react";
-import Navbar from "../../../components/Navbar";
 import LoginCard from "../../../components/LoginCard";
 import Loader from "../../../components/Loader";
 
