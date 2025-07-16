@@ -83,6 +83,7 @@ const getAllResidences = async (req, res) => {
 
     res.status(200).json({
       message: "Approved residents retrieved successfully",
+      count: approvedUsers.length,
       data: approvedUsers,
     });
   } catch (error) {
@@ -102,6 +103,7 @@ const getPendingApprovals = async (req, res) => {
 
     res.status(200).json({
       message: "Pending approvals retrieved successfully",
+      count: approvals.length,
       data: approvals,
     });
   } catch (error) {

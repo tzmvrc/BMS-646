@@ -16,13 +16,13 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ phoneNumber });
 
     if (!user) {
-      return res.status(404).json({ message: "Invalid credentials" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Incorrect credentials" });
     }
 
     const token = jwt.sign(
@@ -56,6 +56,7 @@ const registerUser = async (req, res) => {
       gender,
     } = req.body;
 
+    // ✅ Validate required fields
     if (
       !firstName ||
       !lastName ||
@@ -68,21 +69,39 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    // ✅ Validate image
+    if (!req.file) {
+      return res.status(400).json({ message: "Valid ID image is required" });
+    }
+
     if (!/^\d{11}$/.test(phoneNumber)) {
       return res
         .status(400)
         .json({ message: "Phone number must be exactly 11 digits" });
     }
 
+    // ✅ Check for existing user
     const existingUser = await User.findOne({ phoneNumber });
-    if (existingUser) {
+    if (existingUser && existingUser.isLoginApproved) {
       return res
         .status(400)
         .json({ message: "Phone number already registered" });
     }
 
+    // ✅ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // ✅ Extract Cloudinary data
+    const imageUrl = req.file.path; // secure_url
+    let publicId = imageUrl
+      .split("/")
+      .slice(-2)
+      .join("/")
+      .replace(/\.[^.]+$/, "");
+
+    publicId = decodeURIComponent(publicId);
+
+    // ✅ Save new user
     const newUser = new User({
       firstName,
       lastName,
@@ -91,6 +110,8 @@ const registerUser = async (req, res) => {
       birthdate: new Date(birthdate),
       address,
       gender,
+      idImage: imageUrl,
+      idImagePublicId: publicId,
       isRegisteredVoter: false,
       isLoginApproved: false,
       isVerified: false,
@@ -98,7 +119,7 @@ const registerUser = async (req, res) => {
 
     await newUser.save();
 
-    // Create approval entry
+    // ✅ Create approval entry
     const newApproval = new Approval({
       userId: newUser._id,
     });
@@ -122,6 +143,7 @@ const registerUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 module.exports = {
   loginUser,

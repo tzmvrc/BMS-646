@@ -3,7 +3,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-const connectDB = () => {
+const mongodb = () => {
   mongoose
     .connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
@@ -13,4 +13,4 @@ const connectDB = () => {
     .catch((err) => console.log("❌ MongoDB Connection Error:", err));
 };
 
-module.exports = { connectDB };
+module.exports = { mongodb };

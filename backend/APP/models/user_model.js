@@ -45,6 +45,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    idImage: {
+      type: String,
+      required: [true, "Valid ID image is required"],
+    },
+    idImagePublicId: {
+      type: String, // For later deletion (optional)
+      required: true,
+    },
   },
   { timestamps: true }
 );
