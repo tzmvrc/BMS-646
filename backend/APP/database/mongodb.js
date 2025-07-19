@@ -9,8 +9,8 @@ const mongodb = () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then(() => console.log("✅ Connected to Database"))
-    .catch((err) => console.log("❌ MongoDB Connection Error:", err));
+    .then(() => console.log("| ✅ Connected to Database"))
+    .catch((err) => console.log("| ❌ MongoDB Connection Error:", err));
 };
 
 module.exports = { mongodb };

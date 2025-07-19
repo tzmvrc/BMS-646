@@ -11,6 +11,10 @@ const otpSchema = new mongoose.Schema({
     type: String,
     required: [true, "OTP is required"],
   },
+  verified: {
+    type: Boolean,
+    default: false, // Initially false until OTP is verified
+  },
   createdAt: {
     type: Date,
     default: Date.now,

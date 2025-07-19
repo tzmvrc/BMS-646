@@ -114,7 +114,7 @@ const registerUser = async (req, res) => {
       idImagePublicId: publicId,
       isRegisteredVoter: false,
       isLoginApproved: false,
-      isVerified: false,
+      isVerified: true,
     });
 
     await newUser.save();
@@ -144,8 +144,43 @@ const registerUser = async (req, res) => {
   }
 };
 
+const changePassword = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({ message: "New passwords do not match." });
+    }
+
+    const user = await User.findById(userId);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ message: "Current password is incorrect." });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password changed successfully." });
+  } catch (error) {
+    console.error("Change password error:", error);
+    res.status(500).json({ message: "Server error." });
+  }
+};
+
 
 module.exports = {
   loginUser,
   registerUser,
+  changePassword,
 };

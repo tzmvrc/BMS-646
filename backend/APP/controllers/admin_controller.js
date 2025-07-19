@@ -17,13 +17,13 @@ const loginAdmin = async (req, res) => {
     const admin = await Admin.findOne({ username });
 
     if (!admin) {
-      return res.status(404).json({ message: "Invalid credentials" });
+      return res.status(404).json({ message: "Admin not found" });
     }
 
     const isMatch = await bcrypt.compare(password, admin.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Incorrect credentials" });
     }
 
     const token = jwt.sign(
@@ -36,6 +36,7 @@ const loginAdmin = async (req, res) => {
 
     res.status(200).json({
       message: "Login successful",
+      role: admin.role,
       token,
     });
   } catch (error) {
@@ -46,9 +47,9 @@ const loginAdmin = async (req, res) => {
 
 const addAdmin = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
 
-    if (!username || !password) {
+    if (!username || !password || !role) {
       return res.status(400).json({ message: "Please enter all fields" });
     }
 
@@ -61,13 +62,14 @@ const addAdmin = async (req, res) => {
     const newAdmin = new Admin({
       username,
       password: hashedPassword,
+      role,
     });
 
     await newAdmin.save();
 
     res.status(201).json({
       message: "Admin created successfully",
-      admin: { _id: newAdmin._id, username: newAdmin.username },
+      admin: { _id: newAdmin._id, username: newAdmin.username, role: newAdmin.role },
     });
   } catch (error) {
     console.error(error);

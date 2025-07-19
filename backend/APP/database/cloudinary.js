@@ -35,14 +35,20 @@ const uploadToCloudinary = async (filePath, options = {}) => {
 
 const deleteCloudinaryFile = async (publicId) => {
   if (!publicId) return;
+
+  // Ensure we retain the subfolder path
+  const fullPublicId = `event-image/${publicId}`;
+  const decodedPublicId = decodeURIComponent(fullPublicId); // ✅ Fix encoding issue
+
+  console.log(`🚀 Attempting to delete Cloudinary image: ${decodedPublicId}`);
+
   try {
-    const result = await cloudinary.uploader.destroy(publicId, {
-      resource_type: "auto",
-    });
-    console.log("Cloudinary delete result:", result);
+    const result = await cloudinary.uploader.destroy(decodedPublicId);
+    console.log(`✅ Cloudinary delete result:`, result);
   } catch (error) {
-    console.error("Cloudinary delete error:", error);
+    console.error("❌ Cloudinary delete error:", error);
   }
 };
+
 
 module.exports = { uploadToCloudinary, deleteCloudinaryFile };
