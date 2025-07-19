@@ -22,6 +22,11 @@ body {
   box-sizing: border-box;
 }
 
+/* Prevent text cursor (caret) from appearing on non-input elements */
+*:not(input):not(textarea):not([contenteditable="true"]) {
+  caret-color: transparent;
+}
+
 .dotted-bg {
   background-image: url('./assets/dotted-bg.svg');
   background-repeat: repeat;

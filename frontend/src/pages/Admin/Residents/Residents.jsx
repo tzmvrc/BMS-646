@@ -58,6 +58,8 @@ const Residents = () => {
   const [approvalsLoading, setApprovalsLoading] = useState(true);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [isApprovalsModalOpen, setIsApprovalsModalOpen] = useState(false);
+  const [rejectionReasons, setRejectionReasons] = useState([]);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
 
   const [activeTab, setActiveTab] = useState("approvals");
 
@@ -160,8 +162,12 @@ const Residents = () => {
     setPendingAccounts(pendingAccounts.filter((account) => account.id !== id));
   };
 
-  const handleReject = (id) => {
+  const handleReject = (id, reasons) => {
+    // Here you would typically send the rejection reasons to your backend
+    console.log(`Rejected account ${id} with reasons: ${reasons.join(', ')}`);
     setPendingAccounts(pendingAccounts.filter((account) => account.id !== id));
+    setIsRejectModalOpen(false);
+    setRejectionReasons([]);
   };
 
   const handleViewDetails = (account) => {
@@ -536,41 +542,53 @@ const Residents = () => {
       {/* Approvals Details Modal */}
       {isApprovalsModalOpen && selectedAccount && (
         <div className="fixed inset-0 bg-gray-950/80 bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl">
             <h2 className="text-xl font-bold mb-4">Account Details</h2>
-            <div className="flex flex-col items-center mb-4">
-              <img
-                src={selectedAccount.idImage}
-                alt={selectedAccount.fullName}
-                className="w-24 h-24 rounded-full object-cover mb-2 border-4 border-white shadow-sm"
-              />
-              <h3 className="font-bold text-lg">{selectedAccount.fullName}</h3>
-              <p className="text-gray-500 text-sm">{selectedAccount.email}</p>
+            <div className="flex flex-row gap-6">
+              {/* Left column - ID Image */}
+              <div className="w-1/2">
+                <span className="text-xs text-gray-500 block mb-1">Government ID:</span>
+                <img
+                  src={selectedAccount.idImage}
+                  alt={`${selectedAccount.fullName}'s ID`}
+                  className="w-full h-auto max-h-80 rounded-lg object-contain border border-gray-200 shadow-sm"
+                />
+              </div>
+              
+              {/* Right column - Account Details */}
+              <div className="w-1/2">
+                <div className="flex flex-col items-start mb-4">
+                  <h3 className="font-bold text-lg">{selectedAccount.fullName}</h3>
+                  <p className="text-gray-500 text-sm">{selectedAccount.email}</p>
+                </div>
+                <div className="grid grid-cols-1 gap-3">
+                  <div>
+                    <span className="text-xs text-gray-500 block">Address:</span>
+                    <div className="text-gray-800">{selectedAccount.address}</div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 block">Contact:</span>
+                    <div className="text-gray-800">{selectedAccount.contactNumber}</div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 block">Date Submitted:</span>
+                    <div className="text-gray-800">{formatDate(selectedAccount.dateSubmitted)}</div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 block">Additional Info:</span>
+                    <div className="text-gray-800">{selectedAccount.additionalInfo}</div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 block">Description:</span>
+                    <div className="text-gray-700">{selectedAccount.description}</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="mb-2">
-              <span className="text-xs text-gray-500">Address:</span>
-              <div>{selectedAccount.address}</div>
-            </div>
-            <div className="mb-2">
-              <span className="text-xs text-gray-500">Contact:</span>
-              <div>{selectedAccount.contactNumber}</div>
-            </div>
-            <div className="mb-2">
-              <span className="text-xs text-gray-500">Date Submitted:</span>
-              <div>{formatDate(selectedAccount.dateSubmitted)}</div>
-            </div>
-            <div className="mb-2">
-              <span className="text-xs text-gray-500">Additional Info:</span>
-              <div>{selectedAccount.additionalInfo}</div>
-            </div>
-            <div className="mb-2">
-              <span className="text-xs text-gray-500">Description:</span>
-              <div className="text-gray-700">{selectedAccount.description}</div>
-            </div>
-            <div className="flex justify-end gap-2 mt-4">
+            <div className="flex justify-end gap-2 mt-6">
               <button
                 onClick={() => {
-                  handleReject(selectedAccount.id);
+                  setIsRejectModalOpen(true);
                   setIsApprovalsModalOpen(false);
                 }}
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
@@ -591,6 +609,74 @@ const Residents = () => {
                 className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 ml-2"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Rejection Reason Modal */}
+      {isRejectModalOpen && selectedAccount && (
+        <div className="fixed inset-0 bg-gray-950/80 bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Reject Account</h2>
+            <p className="text-gray-600 mb-4">
+              Please select one or more reasons for rejecting {selectedAccount.fullName}'s account application.
+            </p>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Rejection Reasons
+              </label>
+              <div className="space-y-2 max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-md">
+                {[
+                  "Invalid ID",
+                  "Incomplete Information",
+                  "Duplicate Account",
+                  "Not a Resident",
+                  "Suspicious Activity",
+                  "Unclear Photo",
+                  "Expired Document",
+                  "Information Mismatch",
+                  "Other"
+                ].map((reason) => (
+                  <div key={reason} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`reason-${reason}`}
+                      value={reason}
+                      checked={rejectionReasons.includes(reason)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setRejectionReasons([...rejectionReasons, reason]);
+                        } else {
+                          setRejectionReasons(rejectionReasons.filter(r => r !== reason));
+                        }
+                      }}
+                      className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
+                    />
+                    <label htmlFor={`reason-${reason}`} className="ml-2 block text-sm text-gray-700">
+                      {reason}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => {
+                  setIsRejectModalOpen(false);
+                  setIsApprovalsModalOpen(true);
+                  setRejectionReasons([]);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleReject(selectedAccount.id, rejectionReasons)}
+                disabled={rejectionReasons.length === 0}
+                className={`px-4 py-2 rounded-md text-white ${rejectionReasons.length > 0 ? 'bg-red-600 hover:bg-red-700' : 'bg-red-300 cursor-not-allowed'}`}
+              >
+                Confirm Rejection
               </button>
             </div>
           </div>

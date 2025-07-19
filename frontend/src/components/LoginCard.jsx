@@ -1,16 +1,17 @@
 /** @format */
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { User, Lock, Eye, EyeOff } from "lucide-react";
 
 const LoginCard = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login attempt with:", { email, password });
+    console.log("Login attempt with:", { username, password });
+    // Add your authentication logic here
   };
 
   const togglePasswordVisibility = () => {
@@ -34,24 +35,24 @@ const LoginCard = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 mb-4">
-            <Mail className="w-5 h-5 text-gray-400 mr-2" />
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 mb-4 focus-within:border-black">
+            <User className="w-5 h-5 text-gray-400 mr-2" />
             <input
-              type="email"
-              placeholder="Email"
-              className="w-full outline-none text-sm sm:text-base"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Username"
+              className="w-full caret-black outline-none text-sm sm:text-base"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
 
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2">
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 mb-4 focus-within:border-black">
             <Lock className="w-5 h-5 text-gray-400 mr-2" />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full outline-none text-sm sm:text-base"
+              className="w-full caret-black outline-none text-sm sm:text-base"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -67,6 +68,19 @@ const LoginCard = () => {
                 <Eye className="w-5 h-5" />
               )}
             </button>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="remember"
+              className="mr-2 rounded text-gray-700 focus:ring-gray-900"
+            />
+            <label htmlFor="remember" className="text-sm text-gray-600">
+              Remember me
+            </label>
           </div>
         </div>
 

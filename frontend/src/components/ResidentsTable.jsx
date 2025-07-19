@@ -3,7 +3,6 @@ import React from "react";
 const ResidentsTable = ({ residents }) => (
   <table
     className="min-w-full divide-y divide-gray-200"
-    onClick={() => handleViewDetails(account)}
   >
     <thead className="bg-gray-50">
       <tr>

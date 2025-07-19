@@ -18,7 +18,13 @@ import AdminNavbar from "./components/AdminNavbar";
 import Approvals from "./pages/Admin/Approvals/Approvals.jsx";
 import LandingPage from "./pages/Resident/LandingPage/LandingPage.jsx";
 import UserDashboard from "./pages/Resident/Dashboard/Dashboard.jsx";
+import UserRequests from "./pages/Resident/Requests/Requests.jsx";
+import UserServices from "./pages/Resident/Services/Services.jsx";
+import UserFAQs from "./pages/Resident/FAQs/FAQs.jsx";
+import UserAbout from "./pages/Resident/About/About.jsx";
 import Events from "./pages/Admin/Events/Events.jsx";
+import AdminProfile from "./pages/Admin/Profile/Profile.jsx"
+import UserProfile from "./pages/Resident/Profile/Profile.jsx"
 import Navbar from "./components/Navbar.jsx";
 import "./App.css";
 
@@ -38,12 +44,6 @@ const UserLayout = () => (
   </div>
 );
 
-// Public layout for resident routes
-const PublicLayout = () => (
-  <div className="min-h-screen">
-    <Outlet />
-  </div>
-);
 
 const AnimatedRoutes = ({ loading }) => {
   const location = useLocation();
@@ -62,6 +62,7 @@ const AnimatedRoutes = ({ loading }) => {
           <Route path="reports" element={<Reports />} />
           <Route path="approvals" element={<Approvals />} />
           <Route path="events" element={<Events />} />
+          <Route path="profile" element={<AdminProfile />} />
         </Route>
 
         {/* User routes */}
@@ -70,6 +71,11 @@ const AnimatedRoutes = ({ loading }) => {
         {/* User dashboard routes */}
         <Route path="/" element={<UserLayout />}>
           <Route path="dashboard" element={<UserDashboard />} />
+          <Route path="services" element={<UserServices />} />
+          <Route path="requests" element={<UserRequests />} />
+          <Route path="faqs" element={<UserFAQs />} />
+          <Route path="about" element={<UserAbout />} />
+          <Route path="profile" element={<UserProfile />} />
         </Route>
       </Routes>
     </AnimatePresence>

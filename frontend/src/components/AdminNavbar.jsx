@@ -35,7 +35,6 @@ const AdminNavbar = () => {
                     ${isActive ? "text-black" : "text-gray-800"}
                     group
                   `}
-                  tabIndex={0}
                 >
                   {link.label}
                   {/* underline effect */}

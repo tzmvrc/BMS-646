@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
   { to: "/dashboard", label: "Dashboard" },
-  { to: "/services", label: "Services" },
   { to: "/requests", label: "Requests" },
   { to: "/faqs", label: "FAQs" },
   { to: "/About", label: "About" },
@@ -19,7 +18,7 @@ const AdminNavbar = () => {
       <nav className="bg-white bg-opacity-80 backdrop-blur-sm rounded-full max-w-7xl mx-auto px-6 py-3 mb-8 shadow-sm">
         <div className="flex justify-between items-center">
           <Link
-            to="/admin/dashboard"
+            to="/dashboard"
             className="text-xl font-bold text-gray-800 flex items-center gap-2"
           >
             <img src="/BrgyLogo.png" alt="BMS646 Logo" className="h-8" />
@@ -35,7 +34,6 @@ const AdminNavbar = () => {
                     ${isActive ? "text-black" : "text-gray-800"}
                     group
                   `}
-                  tabIndex={0}
                 >
                   {link.label}
                   {/* underline effect */}

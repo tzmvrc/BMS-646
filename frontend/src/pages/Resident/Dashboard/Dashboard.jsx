@@ -91,15 +91,45 @@ const Dashboard = () => {
     },
   ];
 
+  const initialAnnouncements = [
+    {
+      id: 1,
+      title: "Water Interruption Schedule",
+      date: "2025-07-16",
+      description:
+        "Water supply will be temporarily interrupted on July 20 from 8AM to 4PM for pipeline maintenance. Please store enough water for your needs.",
+      urgent: true,
+    },
+    {
+      id: 2,
+      title: "New Barangay Health Center Hours",
+      date: "2025-07-10",
+      description:
+        "Starting next week, the health center will be open until 7PM every Wednesday to accommodate working residents.",
+      urgent: false,
+    },
+    {
+      id: 3,
+      title: "Community Survey",
+      date: "2025-07-05",
+      description:
+        "We're conducting a survey to improve barangay services. Please visit the barangay hall to participate or complete the online form.",
+      urgent: false,
+    },
+  ];
+
   const Events = () => {
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
     const [events, setEvents] = useState(initialEvents);
+    const [announcements, setAnnouncements] = useState(initialAnnouncements);
     const [showEventModal, setShowEventModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showNoEventsModal, setShowNoEventsModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
+    const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
+    const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
 
     // Calendar grid
     const monthDays = getMonthDays(currentYear, currentMonth);
@@ -147,6 +177,12 @@ const Dashboard = () => {
       }
     };
 
+    // Handle announcement click
+    const handleAnnouncementClick = (announcement) => {
+      setSelectedAnnouncement(announcement);
+      setShowAnnouncementModal(true);
+    };
+
     // Month names
     const monthNames = [
       "January",
@@ -164,7 +200,58 @@ const Dashboard = () => {
     ];
 
     return (
-      <div className="min-h-screen flex flex-col p-4 max-w-7xl mx-auto">
+      <div className="min-h-screen flex flex-col p-4 max-w-7xl mx-auto gap-6">
+        {/* Announcements Section */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-gray-700">
+              Latest Announcements
+            </h2>
+            <button className="text-sm text-blue-600 hover:text-blue-800">
+              View All
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {announcements.map((announcement) => (
+              <div
+                key={announcement.id}
+                className={`p-4 rounded-lg border cursor-pointer transition hover:border-black ${
+                  announcement.urgent
+                    ? "border-red-200 bg-red-50"
+                    : "border-gray-100 bg-gray-50"
+                }`}
+                onClick={() => handleAnnouncementClick(announcement)}
+              >
+                <div className="flex justify-between items-start">
+                  <h3
+                    className={`font-medium ${
+                      announcement.urgent ? "text-red-700" : "text-gray-800"
+                    }`}
+                  >
+                    {announcement.title}
+                    {announcement.urgent && (
+                      <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+                        Urgent
+                      </span>
+                    )}
+                  </h3>
+                  <span className="text-xs text-gray-500">
+                    {announcement.date}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                  {announcement.description}
+                </p>
+                <div className="mt-2 text-xs text-blue-600 hover:text-blue-800">
+                  Read more...
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Calendar Section */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 ">
           {/* Calendar Header */}
           <div className="flex justify-between items-center mb-4">
@@ -257,8 +344,9 @@ const Dashboard = () => {
             })}
           </div>
         </div>
+
         {/* List of events for the month */}
-        <div className="mt-8">
+        <div className="mt-2">
           <h2 className="text-lg font-semibold mb-3 text-gray-700">
             This Month's Events
           </h2>
@@ -337,6 +425,54 @@ const Dashboard = () => {
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setShowEventModal(false)}
+                  className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-700"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Announcement Details Modal */}
+        {showAnnouncementModal && selectedAnnouncement && (
+          <div className="fixed inset-0 bg-gray-900/80 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold">
+                    {selectedAnnouncement.title}
+                  </h3>
+                  <div className="text-sm text-gray-500 mt-1">
+                    Posted on {selectedAnnouncement.date}
+                    {selectedAnnouncement.urgent && (
+                      <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+                        Urgent
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowAnnouncementModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  ×
+                </button>
+              </div>
+              <div
+                className={`p-4 rounded-lg mb-4 ${
+                  selectedAnnouncement.urgent
+                    ? "bg-red-50 border border-red-200"
+                    : "bg-gray-50 border border-gray-200"
+                }`}
+              >
+                <p className="text-gray-700 whitespace-pre-line">
+                  {selectedAnnouncement.description}
+                </p>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setShowAnnouncementModal(false)}
                   className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-700"
                 >
                   Close
